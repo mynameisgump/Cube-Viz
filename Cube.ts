@@ -41,11 +41,22 @@ class Cube {
     }
 
     rotateFaceClockwise(faceNum: number){
+        let row1 = this.faces[faceNum].map(x => x[0]).reverse();
+        let row2 = this.faces[faceNum].map(x => x[0]).reverse();
+        let row3 = this.faces[faceNum].map(x => x[0]).reverse();
 
+        this.faces[faceNum][0] = row1;
+        this.faces[faceNum][1] = row1;
+        this.faces[faceNum][2] = row1;
     }
 
     moveU(){
-
+        this.rotateFaceClockwise(0);
+        let tempRow = this.faces[3][0];
+        this.faces[3][0] = this.faces[5][0];
+        this.faces[5][0] = this.faces[2][0];
+        this.faces[2][0] = this.faces[4][0];
+        this.faces[4][0] = tempRow;
     }
 
     moveL(){
@@ -78,10 +89,14 @@ class Cube {
         console.log("   "+this.faces[1][1].join("")+"   ");
         console.log("   "+this.faces[1][2].join("")+"   ");
 
+        console.log("")
+
     }
 
 
 }
 
 let testCube = new Cube();
-testCube.printFaces()
+testCube.printFaces();
+testCube.moveU();
+testCube.printFaces();

@@ -35,8 +35,20 @@ var Cube = /** @class */ (function () {
         return returnRow;
     };
     Cube.prototype.rotateFaceClockwise = function (faceNum) {
+        var row1 = this.faces[faceNum].map(function (x) { return x[0]; }).reverse();
+        var row2 = this.faces[faceNum].map(function (x) { return x[0]; }).reverse();
+        var row3 = this.faces[faceNum].map(function (x) { return x[0]; }).reverse();
+        this.faces[faceNum][0] = row1;
+        this.faces[faceNum][1] = row1;
+        this.faces[faceNum][2] = row1;
     };
     Cube.prototype.moveU = function () {
+        this.rotateFaceClockwise(0);
+        var tempRow = this.faces[3][0];
+        this.faces[3][0] = this.faces[5][0];
+        this.faces[5][0] = this.faces[2][0];
+        this.faces[2][0] = this.faces[4][0];
+        this.faces[4][0] = tempRow;
     };
     Cube.prototype.moveL = function () {
     };
@@ -57,8 +69,11 @@ var Cube = /** @class */ (function () {
         console.log("   " + this.faces[1][0].join("") + "   ");
         console.log("   " + this.faces[1][1].join("") + "   ");
         console.log("   " + this.faces[1][2].join("") + "   ");
+        console.log("");
     };
     return Cube;
 }());
 var testCube = new Cube();
+testCube.printFaces();
+testCube.moveU();
 testCube.printFaces();
