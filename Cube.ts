@@ -1,3 +1,5 @@
+import { runInThisContext } from "node:vm";
+
 class Cube {
     faces: Array<Array<Array<number>>>;
     //private rows: number;
@@ -42,14 +44,25 @@ class Cube {
 
     rotateFaceClockwise(faceNum: number){
         let row1 = this.faces[faceNum].map(x => x[0]).reverse();
-        let row2 = this.faces[faceNum].map(x => x[0]).reverse();
-        let row3 = this.faces[faceNum].map(x => x[0]).reverse();
-
+        let row2 = this.faces[faceNum].map(x => x[1]).reverse();
+        let row3 = this.faces[faceNum].map(x => x[2]).reverse();
+        
         this.faces[faceNum][0] = row1;
-        this.faces[faceNum][1] = row1;
+        this.faces[faceNum][1] = row2;
+        this.faces[faceNum][2] = row3;
+    }
+    
+    rotateFaceCounterClockwise(faceNum: number){
+        let row1 = this.faces[faceNum].map(x => x[0]);
+        let row2 = this.faces[faceNum].map(x => x[1]);
+        let row3 = this.faces[faceNum].map(x => x[2]);
+
+        this.faces[faceNum][0] = row3;
+        this.faces[faceNum][1] = row2;
         this.faces[faceNum][2] = row1;
     }
 
+    //DONE
     moveU(){
         this.rotateFaceClockwise(0);
         let tempRow = this.faces[3][0];
@@ -59,12 +72,104 @@ class Cube {
         this.faces[4][0] = tempRow;
     }
 
+    //DONE
+    moveUPrime(){
+        this.rotateFaceCounterClockwise(0);
+        let tempRow = this.faces[3][0];
+        this.faces[3][0] = this.faces[4][0];
+        this.faces[4][0] = this.faces[2][0];
+        this.faces[2][0] = this.faces[5][0];
+        this.faces[5][0] = tempRow;
+    }
+
+    //DONE
+    moveD(){
+        this.rotateFaceClockwise(1);
+        let tempRow = this.faces[3][2];
+        this.faces[3][2] = this.faces[4][2];
+        this.faces[4][2] = this.faces[2][2];
+        this.faces[2][2] = this.faces[5][2];
+        this.faces[5][2] = tempRow;
+    }
+
+    moveDPrime(){
+        this.rotateFaceCounterClockwise(1);
+        let tempRow = this.faces[3][2];
+        this.faces[3][2] = this.faces[5][2];
+        this.faces[5][2] = this.faces[2][2];
+        this.faces[2][2] = this.faces[4][2];
+        this.faces[4][2] = tempRow;
+    }
+
+    moveR(){
+        this.rotateFaceClockwise(5);
+        let tempColumn = this.getColumn(3,2);
+        this.setColumn(3,2,this.getColumn(1,2));
+        this.setColumn(1,2,this.getColumn(2,2));
+        this.setColumn(2,2,this.getColumn(0,2));
+        this.setColumn(0,2,tempColumn)
+    }
+
+    moveRPrime(){
+        this.rotateFaceCounterClockwise(5);
+        let tempColumn = this.getColumn(3,2);
+        this.setColumn(3,2,this.getColumn(0,2));
+        this.setColumn(0,2,this.getColumn(2,2));
+        this.setColumn(2,2,this.getColumn(1,2));
+        this.setColumn(1,2,tempColumn);
+
+
+    }
+
     moveL(){
         
     }
 
-    moveR(){
-        
+    moveLPrime(){
+        this.rotateFaceCounterClockwise(4);
+        let tempColumn = this.getColumn(3,0);
+        this.setColumn(3,0,this.getColumn(0,0));
+        this.setColumn(0,0,this.getColumn(2,0));
+        this.setColumn(2,0,this.getColumn(1,0));
+        this.setColumn(1,0,tempColumn)
+    }
+
+
+
+    moveF(){
+        this.rotateFaceClockwise(3);
+        let tempRow = this.getRow(0,2)
+        this.setRow(0,2,this.getColumn(4,2).reverse());
+        this.setColumn(4,2,this.getRow(1,0));
+        this.setRow(1,0,this.getColumn(5,0).reverse());
+        this.setRow(5,0,tempRow);
+    }
+
+    moveFPrime(){
+        this.rotateFaceCounterClockwise(3);
+        let tempRow = this.getRow(0,2)
+        this.setRow(0,2,this.getColumn(5,0).reverse());
+        this.setColumn(4,2,this.getRow(1,0));
+        this.setRow(1,0,this.getColumn(4,2).reverse());
+        this.setRow(4,2,tempRow);
+    }
+
+    moveB(){
+        this.rotateFaceClockwise();
+        let tempRow = this.getRow(0,2)
+        this.setRow(0,2,this.getColumn(5,0).reverse());
+        this.setColumn(4,2,this.getRow(1,0));
+        this.setRow(1,0,this.getColumn(4,2).reverse());
+        this.setRow(4,2,tempRow);
+    }
+
+    moveBPrime(){
+        this.rotateFaceCounterClockwise(3);
+        let tempRow = this.getRow(0,2)
+        this.setRow(0,2,this.getColumn(5,0).reverse());
+        this.setColumn(4,2,this.getRow(1,0));
+        this.setRow(1,0,this.getColumn(4,2).reverse());
+        this.setRow(4,2,tempRow)        
     }
 
     makeFaceString(faceNum: number){
@@ -98,5 +203,6 @@ class Cube {
 
 let testCube = new Cube();
 testCube.printFaces();
-testCube.moveU();
+testCube.moveRPrime();
 testCube.printFaces();
+
