@@ -155,7 +155,7 @@ class Cube {
     }
 
     moveB(){
-        this.rotateFaceClockwise();
+        this.rotateFaceClockwise(2);
         let tempRow = this.getRow(0,2)
         this.setRow(0,2,this.getColumn(5,0).reverse());
         this.setColumn(4,2,this.getRow(1,0));
@@ -164,17 +164,12 @@ class Cube {
     }
 
     moveBPrime(){
-        this.rotateFaceCounterClockwise(3);
+        this.rotateFaceCounterClockwise(2);
         let tempRow = this.getRow(0,2)
         this.setRow(0,2,this.getColumn(5,0).reverse());
         this.setColumn(4,2,this.getRow(1,0));
         this.setRow(1,0,this.getColumn(4,2).reverse());
         this.setRow(4,2,tempRow)        
-    }
-
-    makeFaceString(faceNum: number){
-
-        
     }
 
     printFaces(){
