@@ -69,6 +69,21 @@ export class Cube {
   getfaceR(){
     return this.faces[5];
   }
+  getfaceL(){
+    return this.faces[4];
+  }
+  getfaceU(){
+    return this.faces[0];
+  }
+  getfaceD(){
+    return this.faces[1];
+  }
+  getfaceF(){
+    return this.faces[3];
+  }
+  getfaceB(){
+    return this.faces[2];
+  }
 
   rotateFaceClockwise(faceNum: number) {
     let row1 = this.faces[faceNum].map((x) => x[0]).reverse();
@@ -147,7 +162,14 @@ export class Cube {
     this.setColumn(1, 2, tempColumn);
   }
 
-  moveL() {}
+  moveL() {
+    this.rotateFaceClockwise(4);
+    let tempColumn = this.getColumn(3, 0);
+    this.setColumn(3, 0, this.getColumn(0, 0));
+    this.setColumn(0, 0, this.getColumn(2, 0));
+    this.setColumn(2, 0, this.getColumn(1, 0));
+    this.setColumn(1, 0, tempColumn);
+  }
 
   moveLPrime() {
     this.rotateFaceCounterClockwise(4);
