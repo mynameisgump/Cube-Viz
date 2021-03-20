@@ -1,4 +1,4 @@
-class Cube {
+export class Cube {
   faces: Array<Array<Array<number>>>;
   //private rows: number;
   //private columns: number;
@@ -64,6 +64,10 @@ class Cube {
   getRow(faceNum: number, rowNum: number) {
     let returnRow = this.faces[faceNum][rowNum];
     return returnRow;
+  }
+
+  getfaceR(){
+    return this.faces[5];
   }
 
   rotateFaceClockwise(faceNum: number) {
@@ -223,7 +227,8 @@ class Cube {
   }
 }
 
-let testCube = new Cube();
-testCube.printFaces();
-testCube.moveRPrime();
-testCube.printFaces();
+//Testing Code
+//let testCube = new Cube();
+//testCube.printFaces();
+//testCube.moveRPrime();
+//testCube.printFaces();
