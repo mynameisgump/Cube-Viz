@@ -155,7 +155,10 @@ function keyPressed(e: any){
                   testCube.moveU();
                   setU(pieces,testCube);
                   setR(pieces,testCube);
+                  setL(pieces,testCube);
                   setF(pieces,testCube);
+                  setB(pieces,testCube);
+                  testCube.printFaces();
                   //setU(pieces,testCube);
                 });;
       //tween.start();
@@ -207,7 +210,7 @@ function keyPressed(e: any){
                   setF(pieces,testCube);
                   setB(pieces,testCube);
                   setD(pieces,testCube);
-
+                  testCube.printFaces();
                   //setU(pieces,testCube);
                 });;
     	break;
@@ -229,9 +232,9 @@ function setR(pieces: any[], backendCube: Cube){
   let newArr = [];
   for(var i = 0; i < rVals.length; i++)
   {
-      newArr = newArr.concat(rVals[i].reverse());
+      newArr = newArr.concat(rVals[i]);
   }
-
+  newArr.reverse();
   rPieces.forEach(function (piece, index){
     console.log(cubeColor[newArr[index]]);
     piece.material[0] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
@@ -247,37 +250,14 @@ function filterR(element, index, array){
 
 // TODO
 function setL(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterR);
-  //let rVals = backendCube.getfaceR();
-  let rVals = [[3,2,3],[1,5,5],[1,2,2]];
+  let rPieces = pieces.filter(filterL);
+  let rVals = backendCube.getfaceL();
+
+  //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
   //let rVals = [["3","2","3"],["1","5","5"],["1","2","2"]];
   
   //newArr.reverse();
-  let newArr = [];
-  for(var i = 0; i < rVals.length; i++)
-  {
-      newArr = newArr.concat(rVals[i].reverse());
-  }
 
-  rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
-    piece.material[0] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
-
-  pieces.splice(17,9);
-}
-
-
-function filterL(element, index, array){
-  return (index < 9);
-}
-
-// TODO:
-function setU(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterU);
-  let rVals = backendCube.getfaceU();
-  //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
-  //newArr.reverse();
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
   let row3 = rVals.map((x) => x[2]).reverse();
@@ -285,12 +265,41 @@ function setU(pieces: any[], backendCube: Cube){
   let newArr = [];
   newArr = newArr.concat(row1,row2,row3);
 
+  newArr.reverse();
+  rPieces.forEach(function (piece, index){
+    console.log(cubeColor[newArr[index]]);
+    piece.material[1] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
+  })
+
+}
+
+
+function filterL(element, index, array){
+  return (index < 9);
+}
+
+
+function setU(pieces: any[], backendCube: Cube){
+  let rPieces = pieces.filter(filterU);
+  let rVals = backendCube.getfaceU();
+
+  let tempArr = [];
+
+  let row1 = rVals.map((x) => x[0]);
+  let row2 = rVals.map((x) => x[1]);
+  let row3 = rVals.map((x) => x[2]);
+
+
+  let newArr = [];
+  newArr = newArr.concat(row1,row2,row3);
+
+
+
   rPieces.forEach(function (piece, index){
     console.log(cubeColor[newArr[index]]);
     piece.material[2] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
-  //pieces.splice(17,9,rPieces);
 }
 
 function filterU(element, index, array){
