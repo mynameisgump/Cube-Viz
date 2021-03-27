@@ -55,7 +55,7 @@ const lineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 50 });
 
 
 //////////////////////////
-let pivot = new THREE.Object3D()
+let pivot = new THREE.Group()
 pivot.rotation.set( 0, 0, 0 );
 pivot.updateMatrixWorld();
 ////////////////////////////
@@ -123,13 +123,15 @@ export const animate = () => {
 
 
 function keyPressed(e: any){
-  let pivot = new THREE.Group()
   //pivot.rotation.set( 0, 0, 0 );
+  //pivot.clear();
+  let pivot = new THREE.Group()
+  //console.log(pivot);
   pivot.updateMatrixWorld();
   //console.log(e.key)
-
   let tempPieces;
   let tween;
+
   switch(e.key) {
 
     case 'l':
@@ -152,8 +154,7 @@ function keyPressed(e: any){
     	break;
 
     case 'j':
-      tempPieces = pieces.filter(filterU);
-      tempPieces.forEach(function (piece) {pivot.add( piece )});
+      pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
       tween = new TWEEN.Tween(pivot.rotation)
                 .to({ y: "-" + Math.PI/2}, 250)
@@ -214,7 +215,8 @@ function keyPressed(e: any){
 
     case 'ArrowRight':
     	for ( let i = 18; i < 28; i++) {
-        pivot.add( pieces[ i ] );
+        pivot.add( pieces[i] );
+        //scene.remove(pieces[i]);
       }
       scene.attach( pivot );
       tween = new TWEEN.Tween(pivot.rotation)
@@ -240,7 +242,7 @@ function keyPressed(e: any){
     	break;
   }
   e.preventDefault();
-  animate();
+  //animate();
 }
 
 
