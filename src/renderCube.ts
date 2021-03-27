@@ -6,7 +6,11 @@ import { Cube } from "./Cube";
 
 let testCube = new Cube();
 testCube.printFaces();
- 
+//testCube.moveR();
+//testCube.printFaces();
+//testCube.moveU();
+//testCube.printFaces();
+
 
 const grey = "#808080";
 const red = "#ff0000";
@@ -18,13 +22,13 @@ const orange = "#ff6500";
 const black = "#000000";
 const turq = "#30D5C8";
 
-const cubeColor = {
-  "0": white,
-  "1": yellow,
-  "2": orange,
-  "3": red,
-  "4": green,
-  "5": blue,
+const cubeColor: { [name: number]: string } = {
+  0: white,
+  1: yellow,
+  2: orange,
+  3: red,
+  4: green,
+  5: blue,
 };
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -60,7 +64,7 @@ pivot.rotation.set( 0, 0, 0 );
 pivot.updateMatrixWorld();
 ////////////////////////////
 
-let pieces = [];
+let pieces: THREE.Mesh[] = [];
 
 for (let i = 0; i < 27; i++) {
   let size = 6;
@@ -141,10 +145,10 @@ function keyPressed(e: any){
   	case 'ArrowUp':
       let uPieces = pieces.filter(filterU);
       uPieces.forEach(function (piece) {pivot.add( piece )});
-      console.log("BEGIN")
-      console.log(pieces)
-      console.log(uPieces)
-      console.log("END")
+      //console.log("BEGIN")
+      //console.log(pieces)
+      //console.log(uPieces)
+      //console.log("END")
       scene.attach( pivot );
       let tween = new TWEEN.Tween(pivot.rotation)
                 .to({ y: "-" + Math.PI/2}, 1000)
@@ -152,13 +156,18 @@ function keyPressed(e: any){
                 .onComplete(function() {
                   //setColors(pieces,testCube);
                   pivot.rotation.set(0,0,0);
+                  console.log("MOVING U")
+                  testCube.printFaces();
                   testCube.moveU();
+                  testCube.printFaces();
+                  console.log("MOVED U, STARTING FACE SETTING")
                   setU(pieces,testCube);
                   setR(pieces,testCube);
                   setL(pieces,testCube);
                   setF(pieces,testCube);
                   setB(pieces,testCube);
                   testCube.printFaces();
+                  console.log("FINISHED FACE SETTING")
                   //setU(pieces,testCube);
                 });;
       //tween.start();
@@ -190,27 +199,29 @@ function keyPressed(e: any){
     	break;
 
     case 'ArrowRight':
-      console.log(pivot);
     	for ( let i = 18; i < 28; i++) {
         pivot.add( pieces[ i ] );
       }
-      console.log(pivot);
       scene.attach( pivot );
       tween = new TWEEN.Tween(pivot.rotation)
                 .to({ x: "-" + Math.PI/2}, 1000)
                 .start()
                 .onComplete(function() {
                   //setColors(pieces,testCube);
+                  console.log("STARTING R ROTATion")
                   testCube.printFaces();
                   pivot.rotation.set(0,0,0);
                   testCube.moveR();
                   testCube.printFaces();
+                  console.log("FINISHED R ROTATION")
+                  console.log("SETTING PIECES")
                   setR(pieces,testCube);
                   setU(pieces,testCube);
                   setF(pieces,testCube);
                   setB(pieces,testCube);
                   setD(pieces,testCube);
                   testCube.printFaces();
+                  console.log("SET PIECES")
                   //setU(pieces,testCube);
                 });;
     	break;
@@ -219,24 +230,30 @@ function keyPressed(e: any){
   animate();
 }
 
-console.log(pieces);
+//console.log(pieces);
 
 
 function setR(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterR);
+  rPieces.reverse();
   let rVals = backendCube.getfaceR();
   //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
   //newArr.reverse();
+  //testCube.printFaces()
   
   //Alternative arrary to order in correct position
-  let newArr = [];
-  for(var i = 0; i < rVals.length; i++)
-  {
-      newArr = newArr.concat(rVals[i]);
-  }
-  newArr.reverse();
+  let row1 = rVals[0];
+  let row2 = rVals[1];
+  let row3 = rVals[2];
+
+  let newArr: number[] = [];
+  newArr = newArr.concat(row1,row2,row3);
+  //newArr = newArr.concat(row3,row2,row1);
+  //for (let i = 0; i<rVals.length;i++){
+  //  newArr = newArr.concat(rVals[i].reverse())
+  //}
+  //newArr.reverse();
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[0] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
@@ -258,16 +275,21 @@ function setL(pieces: any[], backendCube: Cube){
   
   //newArr.reverse();
 
-  let row1 = rVals.map((x) => x[0]).reverse();
-  let row2 = rVals.map((x) => x[1]).reverse();
-  let row3 = rVals.map((x) => x[2]).reverse();
-  
-  let newArr = [];
+  //let row1 = rVals.map((x) => x[0]);
+  //let row2 = rVals.map((x) => x[1]);
+  //let row3 = rVals.map((x) => x[2]);
+  let row1 = [...rVals[0]].reverse();
+  let row2 = [...rVals[1]].reverse();
+  let row3 = [...rVals[2]].reverse();
+  let newArr: number[] = [];
+
+  //for (let i = 0; i<rVals.length;i++){
+  //  newArr = newArr.concat(rVals[i].reverse())
+  //}
   newArr = newArr.concat(row1,row2,row3);
 
   newArr.reverse();
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[1] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
@@ -290,13 +312,10 @@ function setU(pieces: any[], backendCube: Cube){
   let row3 = rVals.map((x) => x[2]);
 
 
-  let newArr = [];
+  let newArr: number[] = [];
   newArr = newArr.concat(row1,row2,row3);
 
-
-
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[2] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
@@ -311,16 +330,14 @@ function setD(pieces: any[], backendCube: Cube){
   let rVals = backendCube.getfaceD();
   //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
   //newArr.reverse();
-  console.log(rVals);
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
   let row3 = rVals.map((x) => x[2]).reverse();
   
-  let newArr = [];
+  let newArr: number[] = [];
   newArr = newArr.concat(row1,row2,row3);
 
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[3] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
@@ -335,16 +352,16 @@ function setF(pieces: any[], backendCube: Cube){
   let rVals = backendCube.getfaceF();
   //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
   //newArr.reverse();
-  console.log(rVals);
+  //console.log(rVals);
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
   let row3 = rVals.map((x) => x[2]).reverse();
   
-  let newArr = [];
+  let newArr: number[] = [];
+  
   newArr = newArr.concat(row1,row2,row3);
 
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[4] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
@@ -358,19 +375,18 @@ function filterF(element, index, array){
 
 function setB(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterB);
+  rPieces.reverse();
   let rVals = backendCube.getfaceB();
   //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
   //newArr.reverse();
-  console.log(rVals);
-  let row1 = rVals.map((x) => x[0]).reverse();
-  let row2 = rVals.map((x) => x[1]).reverse();
-  let row3 = rVals.map((x) => x[2]).reverse();
+  let row1 = rVals.map((x) => x[0]);
+  let row2 = rVals.map((x) => x[1]);
+  let row3 = rVals.map((x) => x[2]);
   
-  let newArr = [];
+  let newArr: number[] = [];
   newArr = newArr.concat(row1,row2,row3);
 
   rPieces.forEach(function (piece, index){
-    console.log(cubeColor[newArr[index]]);
     piece.material[5] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 

@@ -148,8 +148,8 @@ export class Cube {
     this.rotateFaceClockwise(5);
     let tempColumn = this.getColumn(3, 2);
     this.setColumn(3, 2, this.getColumn(1, 2));
-    this.setColumn(1, 2, this.getColumn(2, 2));
-    this.setColumn(2, 2, this.getColumn(0, 2));
+    this.setColumn(1, 2, this.getColumn(2, 0).reverse());
+    this.setColumn(2, 0, this.getColumn(0, 2));
     this.setColumn(0, 2, tempColumn);
   }
 
