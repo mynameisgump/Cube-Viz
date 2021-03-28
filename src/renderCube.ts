@@ -45,7 +45,13 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-
+controls.keys = {
+	LEFT: 65, //left arrow
+	UP: 87, // up arrow
+	RIGHT: 68, // right arrow
+	BOTTOM: 83 // down arrow
+}
+controls.update()
 const pieceGeometry = new THREE.BoxGeometry(0.88, 0.88, 0.88);
 
 const edges = new THREE.EdgesGeometry(pieceGeometry);
@@ -195,7 +201,7 @@ function keyPressed(e: any){
       pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
       tween = new TWEEN.Tween(pivot.rotation)
-                .to({ y: "+" + Math.PI/2}, 250)
+                .to({ y: "-" + Math.PI/2}, 250)
                 .start()
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
@@ -253,6 +259,7 @@ function keyPressed(e: any){
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
                   logicCube.moveL();
+                  //logicCube.printFaces();
                   setU(pieces,logicCube);
                   setL(pieces,logicCube);
                   setD(pieces,logicCube);
@@ -314,7 +321,7 @@ function keyPressed(e: any){
                 });;
     	break;
 
-
+    // B
     case 'i':
       pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
@@ -334,6 +341,7 @@ function keyPressed(e: any){
                 });;
     	break;
 
+    //B Prime
     case 'I':
       pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
@@ -349,6 +357,20 @@ function keyPressed(e: any){
                   setR(pieces,logicCube);
                   setB(pieces,logicCube);
                 });;
+    	break;
+
+    
+  	case 'w':
+      //camera.position.y += 1;
+    	break;
+
+    case 'a':
+    	break;
+
+    case 's':
+    	break;
+
+    case 'd':
     	break;
 
   	case 'ArrowUp':
