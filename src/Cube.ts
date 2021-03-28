@@ -157,8 +157,8 @@ export class Cube {
     this.rotateFaceCounterClockwise(5);
     let tempColumn = this.getColumn(3, 2);
     this.setColumn(3, 2, this.getColumn(0, 2));
-    this.setColumn(0, 2, this.getColumn(2, 2));
-    this.setColumn(2, 2, this.getColumn(1, 2));
+    this.setColumn(0, 2, this.getColumn(2, 0));
+    this.setColumn(2, 0, this.getColumn(1, 2));
     this.setColumn(1, 2, tempColumn);
   }
 
@@ -186,7 +186,7 @@ export class Cube {
     this.setRow(0, 2, this.getColumn(4, 2).reverse());
     this.setColumn(4, 2, this.getRow(1, 0));
     this.setRow(1, 0, this.getColumn(5, 0).reverse());
-    this.setRow(5, 0, tempRow);
+    this.setColumn(5, 0, tempRow);
   }
 
   moveFPrime() {
@@ -200,17 +200,17 @@ export class Cube {
 
   moveB() {
     this.rotateFaceClockwise(2);
-    let tempRow = this.getRow(0, 2);
-    this.setRow(0, 2, this.getColumn(5, 0).reverse());
-    this.setColumn(4, 2, this.getRow(1, 0));
-    this.setRow(1, 0, this.getColumn(4, 2).reverse());
-    this.setRow(4, 2, tempRow);
+    let tempRow = this.getRow(0, 0);
+    this.setRow(0, 0, this.getColumn(5, 2).reverse());
+    this.setColumn(5, 2, this.getRow(1, 2));
+    this.setRow(1, 2, this.getColumn(4, 0).reverse());
+    this.setColumn(4, 0, tempRow.reverse());
   }
 
   moveBPrime() {
     this.rotateFaceCounterClockwise(2);
-    let tempRow = this.getRow(0, 2);
-    this.setRow(0, 2, this.getColumn(5, 0).reverse());
+    let tempRow = this.getRow(0, 0);
+    this.setRow(0, 0, this.getColumn(5, 2).reverse());
     this.setColumn(4, 2, this.getRow(1, 0));
     this.setRow(1, 0, this.getColumn(4, 2).reverse());
     this.setRow(4, 2, tempRow);
