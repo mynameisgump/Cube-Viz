@@ -4,8 +4,8 @@ import { Object3D } from "three";
 import * as TWEEN from "@tweenjs/tween.js"
 import { Cube } from "./Cube";
 
-let testCube = new Cube();
-testCube.printFaces();
+let logicCube = new Cube();
+logicCube.printFaces();
 
 
 const grey = "#808080";
@@ -133,7 +133,7 @@ function keyPressed(e: any){
   let tween;
 
   switch(e.key) {
-
+    //R
     case 'l':
       pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
       //tempPieces = pieces.filter(filterR);
@@ -144,15 +144,35 @@ function keyPressed(e: any){
                 .start()
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
-                  testCube.moveR();
-                  setR(pieces,testCube);
-                  setU(pieces,testCube);
-                  setF(pieces,testCube);
-                  setB(pieces,testCube);
-                  setD(pieces,testCube);
+                  logicCube.moveR();
+                  setR(pieces,logicCube);
+                  setU(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                  setD(pieces,logicCube);
                 });;
     	break;
-
+    //D
+    case 'k':
+      pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
+      scene.attach( pivot );
+      tween = new TWEEN.Tween(pivot.rotation)
+                .to({ y: "+" + Math.PI/2}, 250)
+                .start()
+                .onComplete(function() {
+                  pivot.rotation.set(0,0,0);
+                  console.log("MOVING D");
+                  logicCube.printFaces(); 
+                  logicCube.moveD();
+                  logicCube.printFaces();
+                  setD(pieces,logicCube);
+                  setR(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                });;
+      break;
+    //U
     case 'j':
       pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
@@ -161,12 +181,66 @@ function keyPressed(e: any){
                 .start()
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
-                  testCube.moveU();
-                  setU(pieces,testCube);
-                  setR(pieces,testCube);
-                  setL(pieces,testCube);
-                  setF(pieces,testCube);
-                  setB(pieces,testCube);
+                  logicCube.moveU();
+                  setU(pieces,logicCube);
+                  setR(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                });;
+    	break;
+    //L
+    case 'h':
+      pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
+      scene.attach( pivot );
+      console.log(pivot)
+      tween = new TWEEN.Tween(pivot.rotation)
+                .to({ x: "+" + Math.PI/2}, 250)
+                .start()
+                .onComplete(function() {
+                  pivot.rotation.set(0,0,0);
+                  logicCube.moveL();
+                  setU(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setD(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                });;
+    	break;
+
+    case 'u':
+      pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
+      scene.attach( pivot );
+      console.log(pivot)
+      tween = new TWEEN.Tween(pivot.rotation)
+                .to({ x: "+" + Math.PI/2}, 250)
+                .start()
+                .onComplete(function() {
+                  pivot.rotation.set(0,0,0);
+                  logicCube.moveL();
+                  setU(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setD(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                });;
+    	break;
+
+    case 'i':
+      pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
+      scene.attach( pivot );
+      console.log(pivot)
+      tween = new TWEEN.Tween(pivot.rotation)
+                .to({ x: "+" + Math.PI/2}, 250)
+                .start()
+                .onComplete(function() {
+                  pivot.rotation.set(0,0,0);
+                  logicCube.moveL();
+                  setU(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setD(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
                 });;
     	break;
 
@@ -179,12 +253,12 @@ function keyPressed(e: any){
                 .start()
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
-                  testCube.moveU();
-                  setU(pieces,testCube);
-                  setR(pieces,testCube);
-                  setL(pieces,testCube);
-                  setF(pieces,testCube);
-                  setB(pieces,testCube);
+                  logicCube.moveU();
+                  setU(pieces,logicCube);
+                  setR(pieces,logicCube);
+                  setL(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
                 });;
     	break;
 
@@ -223,20 +297,20 @@ function keyPressed(e: any){
                 .to({ x: "-" + Math.PI/2}, 250)
                 .start()
                 .onComplete(function() {
-                  //setColors(pieces,testCube);
+                  //setColors(pieces,logicCube);
                   console.log("STARTING R ROTATion")
-                  testCube.printFaces();
+                  logicCube.printFaces();
                   pivot.rotation.set(0,0,0);
-                  testCube.moveR();
-                  testCube.printFaces();
+                  logicCube.moveR();
+                  logicCube.printFaces();
                   console.log("FINISHED R ROTATION")
                   console.log("SETTING PIECES")
-                  setR(pieces,testCube);
-                  setU(pieces,testCube);
-                  setF(pieces,testCube);
-                  setB(pieces,testCube);
-                  setD(pieces,testCube);
-                  testCube.printFaces();
+                  setR(pieces,logicCube);
+                  setU(pieces,logicCube);
+                  setF(pieces,logicCube);
+                  setB(pieces,logicCube);
+                  setD(pieces,logicCube);
+                  logicCube.printFaces();
                   console.log("SET PIECES")
                 });;
     	break;
