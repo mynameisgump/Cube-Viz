@@ -18,6 +18,8 @@ const orange = "#ff6500";
 const black = "#000000";
 const turq = "#30D5C8";
 
+let turningSpeed = 150;
+
 const cubeColor: { [name: number]: string } = {
   0: white,
   1: yellow,
@@ -58,7 +60,7 @@ const edges = new THREE.EdgesGeometry(pieceGeometry);
 
 const lineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 50 });
 
-
+let turning = false;
 
 //////////////////////////
 let pivot = new THREE.Group()
@@ -141,32 +143,41 @@ function keyPressed(e: any){
   switch(e.key) {
     //R
     case 'l':
-      pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-      //tempPieces = pieces.filter(filterR);
-      //tempPieces.forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ x: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveR();
-                  setR(pieces,logicCube);
-                  setU(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                  setD(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
+        //tempPieces = pieces.filter(filterR);
+        //tempPieces.forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ x: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveR();
+                    setR(pieces,logicCube);
+                    setU(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
 
     //R'
     case 'L':
+      if(!turning){
+      turning = true;
       pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
       //tempPieces = pieces.filter(filterR);
       //tempPieces.forEach(function (piece) {pivot.add( piece )});
       scene.attach( pivot );
       tween = new TWEEN.Tween(pivot.rotation)
-                .to({ x: "+" + Math.PI/2}, 250)
+                .to({ x: "+" + Math.PI/2}, turningSpeed)
                 .start()
                 .onComplete(function() {
                   pivot.rotation.set(0,0,0);
@@ -176,188 +187,275 @@ function keyPressed(e: any){
                   setF(pieces,logicCube);
                   setB(pieces,logicCube);
                   setD(pieces,logicCube);
+                  turning = false;
                 });;
-    	break;
+                break;
+              }
+      else{
+        break;
+      }
     //D
     case 'k':
-      pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ y: "+" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveD();
-                  setD(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-      break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ y: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveD();
+                    setD(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+
 
     //D'
     case 'K':
-      pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ y: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveDPrime();
-                  setD(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-      break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ y: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveDPrime();
+                    setD(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+        
+      }
+      else{
+        break;
+      }
+      
 
     //U
     case 'j':
-      pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ y: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveU();
-                  setU(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ y: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveU();
+                    setU(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
 
     //U'
     case 'J':
-      pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ y: "+" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveUPrime();
-                  setU(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ y: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveUPrime();
+                    setU(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
     //L
     case 'h':
-      pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ x: "+" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveL();
-                  //logicCube.printFaces();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ x: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveL();
+                    //logicCube.printFaces();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
 
     case 'H':
-      pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ x: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveLPrime();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ x: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveLPrime();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
 
     //F
     case 'u':
-      pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ z: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveF();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setR(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ z: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveF();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
 
     //F'
     case 'U':
-      pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ z: "+" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveFPrime();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setR(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ z: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveFPrime();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setF(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+      
 
     // B
     case 'i':
-      pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ z: "+" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.printFaces();
-                  logicCube.moveB();
-                  logicCube.printFaces();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ z: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.printFaces();
+                    logicCube.moveB();
+                    logicCube.printFaces();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+        
+      }
+      else{
+        break;
+      }
+      
 
     //B Prime
     case 'I':
-      pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ z: "-" + Math.PI/2}, 250)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveBPrime();
-                  setU(pieces,logicCube);
-                  setL(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  setR(pieces,logicCube);
-                  setB(pieces,logicCube);
-                });;
-    	break;
+      if(!turning){
+        turning = true;
+        pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ z: "-" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.moveBPrime();
+                    setU(pieces,logicCube);
+                    setL(pieces,logicCube);
+                    setD(pieces,logicCube);
+                    setR(pieces,logicCube);
+                    setB(pieces,logicCube);
+                    turning = false;
+                  });;
+        break;
+      }
+      else{
+        break;
+      }
+
 
     
   	case 'w':
@@ -411,11 +509,6 @@ function setR(pieces: any[], backendCube: Cube){
 
 }
 
-function filterR(element, index, array){
-  return (index > 17);
-
-}
-
 // TODO
 function setL(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterL);
@@ -435,12 +528,6 @@ function setL(pieces: any[], backendCube: Cube){
   })
 
 }
-
-
-function filterL(element, index, array){
-  return (index < 9);
-}
-
 
 function setU(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterU);
@@ -462,9 +549,6 @@ function setU(pieces: any[], backendCube: Cube){
 
 }
 
-function filterU(element, index, array){
-  return (index % 9 >= 6);
-}
 
 function setD(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterD);
@@ -482,9 +566,6 @@ function setD(pieces: any[], backendCube: Cube){
     piece.material[3] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
   })
 
-}
-function filterD(element, index, array){
-  return (index % 9 <= 2)
 }
 
 function setF(pieces: any[], backendCube: Cube){
@@ -507,10 +588,6 @@ function setF(pieces: any[], backendCube: Cube){
 }
 
 
-function filterF(element, index, array){
-  return (index % 3 == 2)
-}
-
 function setB(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterB);
   rPieces.reverse();
@@ -531,6 +608,28 @@ function setB(pieces: any[], backendCube: Cube){
 
   //pieces.splice(17,9,rPieces);
 }
-function filterB(element, index, array){
+
+function filterR(_element: THREE.Mesh, index: number){
+  return (index > 17);
+
+}
+
+function filterL(_element: THREE.Mesh, index: number){
+  return (index < 9);
+}
+
+function filterU(_element: THREE.Mesh, index: number){
+  return (index % 9 >= 6);
+}
+
+function filterD(_element: THREE.Mesh, index: number){
+  return (index % 9 <= 2)
+}
+
+function filterF(_element: THREE.Mesh, index: number){
+  return (index % 3 == 2)
+}
+
+function filterB(_element: THREE.Mesh, index: number){
   return(index % 3 == 0);
 }
