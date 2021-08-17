@@ -173,11 +173,11 @@ export class Cube {
 
   moveLPrime() {
     this.rotateFaceCounterClockwise(4);
-    let tempColumn = this.getColumn(3, 0);
-    this.setColumn(3, 0, this.getColumn(0, 0));
-    this.setColumn(0, 0, this.getColumn(2, 0));
-    this.setColumn(2, 0, this.getColumn(1, 0));
-    this.setColumn(1, 0, tempColumn);
+    let tempColumn = this.getColumn(0, 0);
+    this.setColumn(0, 0, this.getColumn(3, 0));
+    this.setColumn(3, 0, this.getColumn(1, 0));
+    this.setColumn(1, 0, this.getColumn(2, 2).reverse());
+    this.setColumn(2, 2, tempColumn.reverse());
   }
 
   moveF() {

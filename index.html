@@ -16,10 +16,24 @@
         display: block;
       }
 
+      button {
+        position: relative;
+        display: block;
+        z-index: 99;
+        width: 10%;
+        left: 0%;
+        top: 0%;
+      }
+
     </style>
   </head>
   <body>
     <div id="app"></div>
+
+      <button id="display-controls">Display Controls</button>
+      <button id="modal-on-title">Toggle: Drag on tit</button>
+
+
     <script type="module" src="./src/index.ts"></script>
   </body>
 </html>

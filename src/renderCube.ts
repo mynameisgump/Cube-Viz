@@ -4,9 +4,11 @@ import { Object3D } from "three";
 import * as TWEEN from "@tweenjs/tween.js"
 import { Cube } from "./Cube";
 
+
 let logicCube = new Cube();
 logicCube.printFaces();
 
+let lastTween;
 
 const grey = "#808080";
 const red = "#ff0000";
@@ -18,7 +20,7 @@ const orange = "#ff6500";
 const black = "#000000";
 const turq = "#30D5C8";
 
-let turningSpeed = 150;
+let turningSpeed = 250;
 
 const cubeColor: { [name: number]: string } = {
   0: white,
@@ -324,7 +326,7 @@ function keyPressed(e: any){
         break;
       }
       
-
+    //L'
     case 'H':
       if(!turning){
         turning = true;
@@ -336,6 +338,8 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveLPrime();
+                    logicCube.printFaces();
+                    
                     setU(pieces,logicCube);
                     setL(pieces,logicCube);
                     setD(pieces,logicCube);
@@ -633,3 +637,4 @@ function filterF(_element: THREE.Mesh, index: number){
 function filterB(_element: THREE.Mesh, index: number){
   return(index % 3 == 0);
 }
+
