@@ -4,7 +4,7 @@ export class Cube {
   //private columns: number;
   // 0 - White/Top
   // 1 - Yellow/Bottom
-  // 2 - Orange/
+  // 2 - Orange/Back
   // 3 - Red/Front
   // 4 - Green/Left
   // 5 - Blue/Right
@@ -157,8 +157,8 @@ export class Cube {
     this.rotateFaceCounterClockwise(5);
     let tempColumn = this.getColumn(3, 2);
     this.setColumn(3, 2, this.getColumn(0, 2));
-    this.setColumn(0, 2, this.getColumn(2, 0));
-    this.setColumn(2, 0, this.getColumn(1, 2));
+    this.setColumn(0, 2, this.getColumn(2, 0).reverse());
+    this.setColumn(2, 0, this.getColumn(1, 2).reverse());
     this.setColumn(1, 2, tempColumn);
   }
 
@@ -196,9 +196,6 @@ export class Cube {
     this.setColumn(5,0,this.getRow(1,0).reverse());
     this.setRow(1,0, this.getColumn(4,2))
     this.setColumn(4, 2, tempRow)
-    //this.setColumn(4, 2, this.getRow(1, 0));
-    //this.setRow(1, 0, this.getColumn(4, 2).reverse());
-    //this.setRow(4, 2, tempRow);
   }
 
   moveB() {
@@ -217,9 +214,6 @@ export class Cube {
     this.setColumn(4, 0, this.getRow(1,2));
     this.setRow(1, 2, this.getColumn(5,2).reverse());
     this.setColumn(5, 2, tempRow)
-    //this.setColumn(5, 2, this.getRow(1, 2));
-    //this.setColumn(1, 2, this.getRow(4, 0));
-    //this.setRow(4, 0, tempRow);
   }
 
   printFaces() {

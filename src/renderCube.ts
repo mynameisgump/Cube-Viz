@@ -10,6 +10,9 @@ logicCube.printFaces();
 
 let lastTween;
 
+let turnQueue: { (): void; }[];
+turnQueue = [];
+
 const grey = "#808080";
 const red = "#ff0000";
 const white = "#ffffff";
@@ -129,17 +132,41 @@ export const animate = () => {
   requestAnimationFrame(animate);
   TWEEN.update();
   renderer.render(scene, camera);
+  //Timer to check for event on the queue
+
 };
 
+// Turning function check
+// Done in animate
+// If currently no turn set to turn
+// check for completled turn
+// once turn completet shift next in queueu
+
+function cubeTurn(){
+  //turnQueue
+  while(turnQueue.length > 0) {
+    if(turning == false){
+      console.log("Loop")
+      console.log(turnQueue.length)
+      let turn = turnQueue.shift();
+      if (typeof turn != 'undefined'){
+        console.log("Before")
+        turn();
+        console.log("After")
+      }
+    }
+  } 
+}
+
+async function aCubeTurn(){
+
+}
 
 function keyPressed(e: any){
-  //pivot.rotation.set( 0, 0, 0 );
-  //pivot.clear();
-  let pivot = new THREE.Group()
-  //console.log(pivot);
+
+  let pivot = new THREE.Group();
   pivot.updateMatrixWorld();
-  //console.log(e.key)
-  let tempPieces;
+  
   let tween;
 
   switch(e.key) {
@@ -148,8 +175,6 @@ function keyPressed(e: any){
       if(!turning){
         turning = true;
         pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-        //tempPieces = pieces.filter(filterR);
-        //tempPieces.forEach(function (piece) {pivot.add( piece )});
         scene.attach( pivot );
         tween = new TWEEN.Tween(pivot.rotation)
                   .to({ x: "-" + Math.PI/2}, turningSpeed)
@@ -157,11 +182,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveR();
-                    setR(pieces,logicCube);
-                    setU(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
-                    setD(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -173,26 +194,22 @@ function keyPressed(e: any){
     //R'
     case 'L':
       if(!turning){
-      turning = true;
-      pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-      //tempPieces = pieces.filter(filterR);
-      //tempPieces.forEach(function (piece) {pivot.add( piece )});
-      scene.attach( pivot );
-      tween = new TWEEN.Tween(pivot.rotation)
-                .to({ x: "+" + Math.PI/2}, turningSpeed)
-                .start()
-                .onComplete(function() {
-                  pivot.rotation.set(0,0,0);
-                  logicCube.moveRPrime();
-                  setR(pieces,logicCube);
-                  setU(pieces,logicCube);
-                  setF(pieces,logicCube);
-                  setB(pieces,logicCube);
-                  setD(pieces,logicCube);
-                  turning = false;
-                });;
-                break;
-              }
+        turning = true;
+        pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
+        scene.attach( pivot );
+        tween = new TWEEN.Tween(pivot.rotation)
+                  .to({ x: "+" + Math.PI/2}, turningSpeed)
+                  .start()
+                  .onComplete(function() {
+                    pivot.rotation.set(0,0,0);
+                    logicCube.printFaces();
+                    logicCube.moveRPrime();
+                    logicCube.printFaces();
+                    setFaces(pieces,logicCube);
+                    turning = false;
+                  });;
+                  break;
+      }
       else{
         break;
       }
@@ -208,11 +225,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveD();
-                    setD(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -234,11 +247,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveDPrime();
-                    setD(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -261,11 +270,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveU();
-                    setU(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -287,11 +292,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveUPrime();
-                    setU(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -312,12 +313,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveL();
-                    //logicCube.printFaces();
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -338,13 +334,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveLPrime();
-                    logicCube.printFaces();
-                    
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -366,11 +356,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveF();
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setR(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -392,11 +378,8 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveFPrime();
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setF(pieces,logicCube);
-                    setR(pieces,logicCube);
+                    setFaces(pieces,logicCube);
+
                     turning = false;
                   });;
         break;
@@ -417,14 +400,8 @@ function keyPressed(e: any){
                   .start()
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
-                    logicCube.printFaces();
                     logicCube.moveB();
-                    logicCube.printFaces();
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -447,11 +424,7 @@ function keyPressed(e: any){
                   .onComplete(function() {
                     pivot.rotation.set(0,0,0);
                     logicCube.moveBPrime();
-                    setU(pieces,logicCube);
-                    setL(pieces,logicCube);
-                    setD(pieces,logicCube);
-                    setR(pieces,logicCube);
-                    setB(pieces,logicCube);
+                    setFaces(pieces,logicCube);
                     turning = false;
                   });;
         break;
@@ -463,7 +436,12 @@ function keyPressed(e: any){
 
     
   	case 'w':
-      //camera.position.y += 1;
+      //turnR();
+      turnQueue.push(turnR);
+      //turnQueue.push(turnR);
+      //console.log(turnQueue.length)
+      //cubeTurn();
+      
     	break;
 
     case 'a':
@@ -492,6 +470,53 @@ function keyPressed(e: any){
 }
 
 
+function turnR(){
+  let pivot = new THREE.Group();
+  pivot.updateMatrixWorld();
+  pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
+  scene.attach( pivot );
+  let tween = new TWEEN.Tween(pivot.rotation)
+            .to({ x: "-" + Math.PI/2}, turningSpeed)
+            .start()
+            .onComplete(function() {
+              pivot.rotation.set(0,0,0);
+              logicCube.moveR();
+              setFaces(pieces,logicCube);
+              turning = false;
+            });;
+  
+
+}
+
+function turnRPrime(){
+  let pivot = new THREE.Group();
+  pivot.updateMatrixWorld();
+  pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
+  scene.attach( pivot );
+  let tween = new TWEEN.Tween(pivot.rotation)
+            .to({ x: "+" + Math.PI/2}, turningSpeed)
+            .start()
+            .onComplete(function() {
+              pivot.rotation.set(0,0,0);
+              logicCube.printFaces();
+              logicCube.moveRPrime();
+              logicCube.printFaces();
+              setFaces(pieces,logicCube);
+              turning = false;
+  });;
+}
+
+
+// Function to set the colours of the faces based off of the colours 
+// from the cube object
+function setFaces(pieces: any[], backendCube: Cube){
+  setR(pieces,backendCube);
+  setL(pieces,backendCube);
+  setU(pieces,backendCube);
+  setD(pieces,backendCube);
+  setF(pieces,backendCube);
+  setB(pieces,backendCube);
+}
 
 function setR(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterR);
@@ -513,7 +538,6 @@ function setR(pieces: any[], backendCube: Cube){
 
 }
 
-// TODO
 function setL(pieces: any[], backendCube: Cube){
   let rPieces = pieces.filter(filterL);
   let rVals = backendCube.getfaceL();
