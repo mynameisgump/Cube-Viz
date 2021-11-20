@@ -35,4 +35,4 @@ i - B
 
 By holding shift you can also do prime moves as well :)
 
-![alt text](https://github.com/TheCrypticCanadian/Cube-Viz/blob/main/image.jpg?raw=true)
+![Cube picture](https://github.com/TheCrypticCanadian/Cube-Viz/blob/main/Cube.png)
