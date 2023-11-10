@@ -521,7 +521,7 @@ function setFaces(pieces: any[], backendCube: Cube) {
 function setR(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("R"));
   rPieces.reverse();
-  let rVals = backendCube.getfaceR();
+  let rVals = backendCube.getFace("R");
 
   //Alternative arrary to order in correct position
   let row1 = rVals[0];
@@ -541,7 +541,7 @@ function setR(pieces: any[], backendCube: Cube) {
 
 function setL(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("L"));
-  let rVals = backendCube.getfaceL();
+  let rVals = backendCube.getFace("L");
 
   let row1 = [...rVals[0]].reverse();
   let row2 = [...rVals[1]].reverse();
@@ -561,7 +561,7 @@ function setL(pieces: any[], backendCube: Cube) {
 
 function setU(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("U"));
-  let rVals = backendCube.getfaceU();
+  let rVals = backendCube.getFace("U");
   let tempArr = [];
 
   let row1 = rVals.map((x) => x[0]);
@@ -581,7 +581,7 @@ function setU(pieces: any[], backendCube: Cube) {
 
 function setD(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("D"));
-  let rVals = backendCube.getfaceD();
+  let rVals = backendCube.getFace("D");
 
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
@@ -600,7 +600,7 @@ function setD(pieces: any[], backendCube: Cube) {
 
 function setF(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("F"));
-  let rVals = backendCube.getfaceF();
+  let rVals = backendCube.getFace("F");
 
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
@@ -621,7 +621,7 @@ function setF(pieces: any[], backendCube: Cube) {
 function setB(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("B"));
   rPieces.reverse();
-  let rVals = backendCube.getfaceB();
+  let rVals = backendCube.getFace("B");
   let row1 = rVals.map((x) => x[0]);
   let row2 = rVals.map((x) => x[1]);
   let row3 = rVals.map((x) => x[2]);

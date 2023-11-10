@@ -1,3 +1,14 @@
+enum Face {
+  "U",
+  "D",
+  "B",
+  "F",
+  "L",
+  "R",
+}
+
+type FaceType = "U" | "D" | "B" | "F" | "L" | "R";
+
 export class Cube {
   faces: Array<Array<Array<number>>>;
   //private rows: number;
@@ -66,23 +77,8 @@ export class Cube {
     return returnRow;
   }
 
-  getfaceR() {
-    return this.faces[5];
-  }
-  getfaceL() {
-    return this.faces[4];
-  }
-  getfaceU() {
-    return this.faces[0];
-  }
-  getfaceD() {
-    return this.faces[1];
-  }
-  getfaceF() {
-    return this.faces[3];
-  }
-  getfaceB() {
-    return this.faces[2];
+  getFace(faceNum: FaceType) {
+    return this.faces[Face[faceNum]];
   }
 
   rotateFaceClockwise(faceNum: number) {
