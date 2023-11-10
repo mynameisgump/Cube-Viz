@@ -66,22 +66,22 @@ export class Cube {
     return returnRow;
   }
 
-  getfaceR(){
+  getfaceR() {
     return this.faces[5];
   }
-  getfaceL(){
+  getfaceL() {
     return this.faces[4];
   }
-  getfaceU(){
+  getfaceU() {
     return this.faces[0];
   }
-  getfaceD(){
+  getfaceD() {
     return this.faces[1];
   }
-  getfaceF(){
+  getfaceF() {
     return this.faces[3];
   }
-  getfaceB(){
+  getfaceB() {
     return this.faces[2];
   }
 
@@ -193,9 +193,9 @@ export class Cube {
     this.rotateFaceCounterClockwise(3);
     let tempRow = this.getRow(0, 2).reverse();
     this.setRow(0, 2, this.getColumn(5, 0));
-    this.setColumn(5,0,this.getRow(1,0).reverse());
-    this.setRow(1,0, this.getColumn(4,2))
-    this.setColumn(4, 2, tempRow)
+    this.setColumn(5, 0, this.getRow(1, 0).reverse());
+    this.setRow(1, 0, this.getColumn(4, 2));
+    this.setColumn(4, 2, tempRow);
   }
 
   moveB() {
@@ -211,9 +211,9 @@ export class Cube {
     this.rotateFaceCounterClockwise(2);
     let tempRow = this.getRow(0, 0);
     this.setRow(0, 0, this.getColumn(4, 0).reverse());
-    this.setColumn(4, 0, this.getRow(1,2));
-    this.setRow(1, 2, this.getColumn(5,2).reverse());
-    this.setColumn(5, 2, tempRow)
+    this.setColumn(4, 0, this.getRow(1, 2));
+    this.setRow(1, 2, this.getColumn(5, 2).reverse());
+    this.setColumn(5, 2, tempRow);
   }
 
   printFaces() {

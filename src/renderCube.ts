@@ -5,7 +5,6 @@ import * as TWEEN from "@tweenjs/tween.js";
 import { Cube } from "./Cube";
 
 let logicCube = new Cube();
-logicCube.printFaces();
 
 let lastTween;
 
@@ -41,7 +40,39 @@ const cubeIndexCalcs = {
   B: (_element: THREE.Mesh, index: number) => {
     return index % 3 == 0;
   },
+  RPrime: (_element: THREE.Mesh, index: number) => {
+    return index > 17;
+  },
+  LPrime: (_element: THREE.Mesh, index: number) => {
+    return index < 9;
+  },
+  UPrime: (_element: THREE.Mesh, index: number) => {
+    return index % 9 >= 6;
+  },
+  DPrime: (_element: THREE.Mesh, index: number) => {
+    return index % 9 <= 2;
+  },
+  FPrime: (_element: THREE.Mesh, index: number) => {
+    return index % 3 == 2;
+  },
+  BPrime: (_element: THREE.Mesh, index: number) => {
+    return index % 3 == 0;
+  },
 };
+
+type Moves =
+  | "R"
+  | "L"
+  | "U"
+  | "D"
+  | "F"
+  | "B"
+  | "RPrime"
+  | "LPrime"
+  | "UPrime"
+  | "DPrime"
+  | "FPrime"
+  | "BPrime";
 
 let turningSpeed = 250;
 
@@ -148,7 +179,6 @@ export const animate = () => {
   requestAnimationFrame(animate);
   TWEEN.update();
   renderer.render(scene, camera);
-  //Timer to check for event on the queue
 };
 
 // Turning function check
@@ -157,23 +187,27 @@ export const animate = () => {
 // check for completled turn
 // once turn completet shift next in queueu
 
-function cubeTurn() {
-  //turnQueue
-  while (turnQueue.length > 0) {
-    if (turning == false) {
-      console.log("Loop");
-      console.log(turnQueue.length);
-      let turn = turnQueue.shift();
-      if (typeof turn != "undefined") {
-        console.log("Before");
-        turn();
-        console.log("After");
-      }
-    }
+function turnCube(direction: Moves) {
+  let pivot = new THREE.Group();
+  pivot.updateMatrixWorld();
+  let tween;
+  if (!turning) {
+    turning = true;
+    pieces.filter(filterCubes(direction)).forEach(function (piece) {
+      pivot.add(piece);
+    });
+    scene.attach(pivot);
+    tween = new TWEEN.Tween(pivot.rotation)
+      .to({ x: "-" + Math.PI / 2 }, turningSpeed)
+      .start()
+      .onComplete(function () {
+        pivot.rotation.set(0, 0, 0);
+        logicCube.moveR();
+        setFaces(pieces, logicCube);
+        turning = false;
+      });
   }
 }
-
-async function aCubeTurn() {}
 
 function keyPressed(e: any) {
   let pivot = new THREE.Group();
@@ -217,9 +251,7 @@ function keyPressed(e: any) {
           .start()
           .onComplete(function () {
             pivot.rotation.set(0, 0, 0);
-            logicCube.printFaces();
             logicCube.moveRPrime();
-            logicCube.printFaces();
             setFaces(pieces, logicCube);
             turning = false;
           });
@@ -449,12 +481,6 @@ function keyPressed(e: any) {
       }
 
     case "w":
-      //turnR();
-      turnQueue.push(turnR);
-      //turnQueue.push(turnR);
-      //console.log(turnQueue.length)
-      //cubeTurn();
-
       break;
 
     case "a":
@@ -479,45 +505,6 @@ function keyPressed(e: any) {
       break;
   }
   e.preventDefault();
-  //animate();
-}
-
-function turnR() {
-  let pivot = new THREE.Group();
-  pivot.updateMatrixWorld();
-  pieces.filter(filterCubes("R")).forEach(function (piece) {
-    pivot.add(piece);
-  });
-  scene.attach(pivot);
-  let tween = new TWEEN.Tween(pivot.rotation)
-    .to({ x: "-" + Math.PI / 2 }, turningSpeed)
-    .start()
-    .onComplete(function () {
-      pivot.rotation.set(0, 0, 0);
-      logicCube.moveR();
-      setFaces(pieces, logicCube);
-      turning = false;
-    });
-}
-
-function turnRPrime() {
-  let pivot = new THREE.Group();
-  pivot.updateMatrixWorld();
-  pieces.filter(filterCubes("R")).forEach(function (piece) {
-    pivot.add(piece);
-  });
-  scene.attach(pivot);
-  let tween = new TWEEN.Tween(pivot.rotation)
-    .to({ x: "+" + Math.PI / 2 }, turningSpeed)
-    .start()
-    .onComplete(function () {
-      pivot.rotation.set(0, 0, 0);
-      logicCube.printFaces();
-      logicCube.moveRPrime();
-      logicCube.printFaces();
-      setFaces(pieces, logicCube);
-      turning = false;
-    });
 }
 
 // Function to set the colours of the faces based off of the colours
@@ -635,8 +622,6 @@ function setB(pieces: any[], backendCube: Cube) {
   let rPieces = pieces.filter(filterCubes("B"));
   rPieces.reverse();
   let rVals = backendCube.getfaceB();
-  //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
-  //newArr.reverse();
   let row1 = rVals.map((x) => x[0]);
   let row2 = rVals.map((x) => x[1]);
   let row3 = rVals.map((x) => x[2]);
@@ -650,12 +635,10 @@ function setB(pieces: any[], backendCube: Cube) {
       color: cubeColor[newArr[index]],
     });
   });
-
-  //pieces.splice(17,9,rPieces);
 }
 
 type Faces = "R" | "L" | "U" | "D" | "F" | "B";
 
-const filterCubes = (face: Faces) => {
-  return cubeIndexCalcs[face];
+const filterCubes = (move: Moves) => {
+  return cubeIndexCalcs[move];
 };
