@@ -1,16 +1,15 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as THREE from "three";
 import { Object3D } from "three";
-import * as TWEEN from "@tweenjs/tween.js"
+import * as TWEEN from "@tweenjs/tween.js";
 import { Cube } from "./Cube";
-
 
 let logicCube = new Cube();
 logicCube.printFaces();
 
 let lastTween;
 
-let turnQueue: { (): void; }[];
+let turnQueue: { (): void }[];
 turnQueue = [];
 
 const grey = "#808080";
@@ -22,6 +21,27 @@ const yellow = "#ffff00";
 const orange = "#ff6500";
 const black = "#000000";
 const turq = "#30D5C8";
+
+const cubeIndexCalcs = {
+  R: (_element: THREE.Mesh, index: number) => {
+    return index > 17;
+  },
+  L: (_element: THREE.Mesh, index: number) => {
+    return index < 9;
+  },
+  U: (_element: THREE.Mesh, index: number) => {
+    return index % 9 >= 6;
+  },
+  D: (_element: THREE.Mesh, index: number) => {
+    return index % 9 <= 2;
+  },
+  F: (_element: THREE.Mesh, index: number) => {
+    return index % 3 == 2;
+  },
+  B: (_element: THREE.Mesh, index: number) => {
+    return index % 3 == 0;
+  },
+};
 
 let turningSpeed = 250;
 
@@ -39,7 +59,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0xffffff, 1);
 document.body.appendChild(renderer.domElement);
 
-document.body.addEventListener('keydown', keyPressed);
+document.body.addEventListener("keydown", keyPressed);
 
 const scene = new THREE.Scene();
 
@@ -53,12 +73,12 @@ camera.position.set(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.keys = {
-	LEFT: 65, //left arrow
-	UP: 87, // up arrow
-	RIGHT: 68, // right arrow
-	BOTTOM: 83 // down arrow
-}
-controls.update()
+  LEFT: 65, //left arrow
+  UP: 87, // up arrow
+  RIGHT: 68, // right arrow
+  BOTTOM: 83, // down arrow
+};
+controls.update();
 const pieceGeometry = new THREE.BoxGeometry(0.88, 0.88, 0.88);
 
 const edges = new THREE.EdgesGeometry(pieceGeometry);
@@ -68,8 +88,8 @@ const lineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 50 });
 let turning = false;
 
 //////////////////////////
-let pivot = new THREE.Group()
-pivot.rotation.set( 0, 0, 0 );
+let pivot = new THREE.Group();
+pivot.rotation.set(0, 0, 0);
 pivot.updateMatrixWorld();
 ////////////////////////////
 
@@ -120,10 +140,6 @@ for (let i = 0; i < 27; i++) {
   scene.add(pieces[i]);
 }
 
-
-
-
-
 camera.position.z = 5;
 
 controls.update();
@@ -133,7 +149,6 @@ export const animate = () => {
   TWEEN.update();
   renderer.render(scene, camera);
   //Timer to check for event on the queue
-
 };
 
 // Turning function check
@@ -142,404 +157,403 @@ export const animate = () => {
 // check for completled turn
 // once turn completet shift next in queueu
 
-function cubeTurn(){
+function cubeTurn() {
   //turnQueue
-  while(turnQueue.length > 0) {
-    if(turning == false){
-      console.log("Loop")
-      console.log(turnQueue.length)
+  while (turnQueue.length > 0) {
+    if (turning == false) {
+      console.log("Loop");
+      console.log(turnQueue.length);
       let turn = turnQueue.shift();
-      if (typeof turn != 'undefined'){
-        console.log("Before")
+      if (typeof turn != "undefined") {
+        console.log("Before");
         turn();
-        console.log("After")
+        console.log("After");
       }
     }
-  } 
+  }
 }
 
-async function aCubeTurn(){
+async function aCubeTurn() {}
 
-}
-
-function keyPressed(e: any){
-
+function keyPressed(e: any) {
   let pivot = new THREE.Group();
   pivot.updateMatrixWorld();
-  
+
   let tween;
 
-  switch(e.key) {
+  switch (e.key) {
     //R
-    case 'l':
-      if(!turning){
+    case "l":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("R")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ x: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveR();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ x: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveR();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
         break;
-      }
-      else{
+      } else {
         break;
       }
 
     //R'
-    case 'L':
-      if(!turning){
+    case "L":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("R")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ x: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.printFaces();
-                    logicCube.moveRPrime();
-                    logicCube.printFaces();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
-                  break;
-      }
-      else{
+          .to({ x: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.printFaces();
+            logicCube.moveRPrime();
+            logicCube.printFaces();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
     //D
-    case 'k':
-      if(!turning){
+    case "k":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("D")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ y: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveD();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ y: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveD();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-
 
     //D'
-    case 'K':
-      if(!turning){
+    case "K":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterD).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("D")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ y: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveDPrime();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ y: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveDPrime();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
         break;
-        
-      }
-      else{
+      } else {
         break;
       }
-      
 
     //U
-    case 'j':
-      if(!turning){
+    case "j":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("U")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ y: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveU();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ y: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveU();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
 
     //U'
-    case 'J':
-      if(!turning){
+    case "J":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterU).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("U")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ y: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveUPrime();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ y: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveUPrime();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
+
     //L
-    case 'h':
-      if(!turning){
+    case "h":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("L")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ x: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveL();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ x: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveL();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
+
     //L'
-    case 'H':
-      if(!turning){
+    case "H":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterL).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("L")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ x: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveLPrime();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ x: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveLPrime();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
 
     //F
-    case 'u':
-      if(!turning){
+    case "u":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("F")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ z: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveF();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ z: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveF();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
 
     //F'
-    case 'U':
-      if(!turning){
+    case "U":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterF).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("F")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ z: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveFPrime();
-                    setFaces(pieces,logicCube);
+          .to({ z: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveFPrime();
+            setFaces(pieces, logicCube);
 
-                    turning = false;
-                  });;
+            turning = false;
+          });
+        break;
+      } else {
         break;
       }
-      else{
-        break;
-      }
-      
 
     // B
-    case 'i':
-      if(!turning){
+    case "i":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("B")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ z: "+" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveB();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ z: "+" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveB();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
         break;
-        
-      }
-      else{
+      } else {
         break;
       }
-      
 
     //B Prime
-    case 'I':
-      if(!turning){
+    case "I":
+      if (!turning) {
         turning = true;
-        pieces.filter(filterB).forEach(function (piece) {pivot.add( piece )});
-        scene.attach( pivot );
+        pieces.filter(filterCubes("B")).forEach(function (piece) {
+          pivot.add(piece);
+        });
+        scene.attach(pivot);
         tween = new TWEEN.Tween(pivot.rotation)
-                  .to({ z: "-" + Math.PI/2}, turningSpeed)
-                  .start()
-                  .onComplete(function() {
-                    pivot.rotation.set(0,0,0);
-                    logicCube.moveBPrime();
-                    setFaces(pieces,logicCube);
-                    turning = false;
-                  });;
+          .to({ z: "-" + Math.PI / 2 }, turningSpeed)
+          .start()
+          .onComplete(function () {
+            pivot.rotation.set(0, 0, 0);
+            logicCube.moveBPrime();
+            setFaces(pieces, logicCube);
+            turning = false;
+          });
         break;
-      }
-      else{
+      } else {
         break;
       }
 
-
-    
-  	case 'w':
+    case "w":
       //turnR();
       turnQueue.push(turnR);
       //turnQueue.push(turnR);
       //console.log(turnQueue.length)
       //cubeTurn();
-      
-    	break;
 
-    case 'a':
-    	break;
+      break;
 
-    case 's':
-    	break;
+    case "a":
+      break;
 
-    case 'd':
-    	break;
+    case "s":
+      break;
 
-  	case 'ArrowUp':
-    	break;
+    case "d":
+      break;
 
-    case 'ArrowDown':
-    	break;
+    case "ArrowUp":
+      break;
 
-    case 'ArrowLeft':
-    	break;
+    case "ArrowDown":
+      break;
 
-    case 'ArrowRight':
-    	break;
+    case "ArrowLeft":
+      break;
+
+    case "ArrowRight":
+      break;
   }
   e.preventDefault();
   //animate();
 }
 
-
-function turnR(){
+function turnR() {
   let pivot = new THREE.Group();
   pivot.updateMatrixWorld();
-  pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-  scene.attach( pivot );
+  pieces.filter(filterCubes("R")).forEach(function (piece) {
+    pivot.add(piece);
+  });
+  scene.attach(pivot);
   let tween = new TWEEN.Tween(pivot.rotation)
-            .to({ x: "-" + Math.PI/2}, turningSpeed)
-            .start()
-            .onComplete(function() {
-              pivot.rotation.set(0,0,0);
-              logicCube.moveR();
-              setFaces(pieces,logicCube);
-              turning = false;
-            });;
-  
-
+    .to({ x: "-" + Math.PI / 2 }, turningSpeed)
+    .start()
+    .onComplete(function () {
+      pivot.rotation.set(0, 0, 0);
+      logicCube.moveR();
+      setFaces(pieces, logicCube);
+      turning = false;
+    });
 }
 
-function turnRPrime(){
+function turnRPrime() {
   let pivot = new THREE.Group();
   pivot.updateMatrixWorld();
-  pieces.filter(filterR).forEach(function (piece) {pivot.add( piece )});
-  scene.attach( pivot );
+  pieces.filter(filterCubes("R")).forEach(function (piece) {
+    pivot.add(piece);
+  });
+  scene.attach(pivot);
   let tween = new TWEEN.Tween(pivot.rotation)
-            .to({ x: "+" + Math.PI/2}, turningSpeed)
-            .start()
-            .onComplete(function() {
-              pivot.rotation.set(0,0,0);
-              logicCube.printFaces();
-              logicCube.moveRPrime();
-              logicCube.printFaces();
-              setFaces(pieces,logicCube);
-              turning = false;
-  });;
+    .to({ x: "+" + Math.PI / 2 }, turningSpeed)
+    .start()
+    .onComplete(function () {
+      pivot.rotation.set(0, 0, 0);
+      logicCube.printFaces();
+      logicCube.moveRPrime();
+      logicCube.printFaces();
+      setFaces(pieces, logicCube);
+      turning = false;
+    });
 }
 
-
-// Function to set the colours of the faces based off of the colours 
+// Function to set the colours of the faces based off of the colours
 // from the cube object
-function setFaces(pieces: any[], backendCube: Cube){
-  setR(pieces,backendCube);
-  setL(pieces,backendCube);
-  setU(pieces,backendCube);
-  setD(pieces,backendCube);
-  setF(pieces,backendCube);
-  setB(pieces,backendCube);
+function setFaces(pieces: any[], backendCube: Cube) {
+  setR(pieces, backendCube);
+  setL(pieces, backendCube);
+  setU(pieces, backendCube);
+  setD(pieces, backendCube);
+  setF(pieces, backendCube);
+  setB(pieces, backendCube);
 }
 
-function setR(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterR);
+function setR(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("R"));
   rPieces.reverse();
   let rVals = backendCube.getfaceR();
-  
+
   //Alternative arrary to order in correct position
   let row1 = rVals[0];
   let row2 = rVals[1];
   let row3 = rVals[2];
 
   let newArr: number[] = [];
-  newArr = newArr.concat(row1,row2,row3);
-  
-  rPieces.forEach(function (piece, index){
-    piece.material[0].dispose();
-    piece.material[0] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
+  newArr = newArr.concat(row1, row2, row3);
 
+  rPieces.forEach(function (piece, index) {
+    piece.material[0].dispose();
+    piece.material[0] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 }
 
-function setL(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterL);
+function setL(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("L"));
   let rVals = backendCube.getfaceL();
 
   let row1 = [...rVals[0]].reverse();
@@ -547,18 +561,19 @@ function setL(pieces: any[], backendCube: Cube){
   let row3 = [...rVals[2]].reverse();
   let newArr: number[] = [];
 
-  newArr = newArr.concat(row1,row2,row3);
+  newArr = newArr.concat(row1, row2, row3);
 
   newArr.reverse();
-  rPieces.forEach(function (piece, index){
+  rPieces.forEach(function (piece, index) {
     piece.material[1].dispose();
-    piece.material[1] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
-
+    piece.material[1] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 }
 
-function setU(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterU);
+function setU(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("U"));
   let rVals = backendCube.getfaceU();
   let tempArr = [];
 
@@ -566,58 +581,58 @@ function setU(pieces: any[], backendCube: Cube){
   let row2 = rVals.map((x) => x[1]);
   let row3 = rVals.map((x) => x[2]);
 
-
   let newArr: number[] = [];
-  newArr = newArr.concat(row1,row2,row3);
+  newArr = newArr.concat(row1, row2, row3);
 
-  rPieces.forEach(function (piece, index){
+  rPieces.forEach(function (piece, index) {
     piece.material[2].dispose();
-    piece.material[2] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
-
+    piece.material[2] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 }
 
-
-function setD(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterD);
+function setD(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("D"));
   let rVals = backendCube.getfaceD();
 
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
   let row3 = rVals.map((x) => x[2]).reverse();
-  
+
   let newArr: number[] = [];
-  newArr = newArr.concat(row1,row2,row3);
+  newArr = newArr.concat(row1, row2, row3);
 
-  rPieces.forEach(function (piece, index){
+  rPieces.forEach(function (piece, index) {
     piece.material[3].dispose();
-    piece.material[3] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
-
+    piece.material[3] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 }
 
-function setF(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterF);
+function setF(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("F"));
   let rVals = backendCube.getfaceF();
 
   let row1 = rVals.map((x) => x[0]).reverse();
   let row2 = rVals.map((x) => x[1]).reverse();
   let row3 = rVals.map((x) => x[2]).reverse();
-  
+
   let newArr: number[] = [];
-  
-  newArr = newArr.concat(row1,row2,row3);
 
-  rPieces.forEach(function (piece, index){
+  newArr = newArr.concat(row1, row2, row3);
+
+  rPieces.forEach(function (piece, index) {
     piece.material[4].dispose();
-    piece.material[4] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
-
+    piece.material[4] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 }
 
-
-function setB(pieces: any[], backendCube: Cube){
-  let rPieces = pieces.filter(filterB);
+function setB(pieces: any[], backendCube: Cube) {
+  let rPieces = pieces.filter(filterCubes("B"));
   rPieces.reverse();
   let rVals = backendCube.getfaceB();
   //let rVals = [[3,2,3],[1,5,5],[1,2,2]];
@@ -625,40 +640,22 @@ function setB(pieces: any[], backendCube: Cube){
   let row1 = rVals.map((x) => x[0]);
   let row2 = rVals.map((x) => x[1]);
   let row3 = rVals.map((x) => x[2]);
-  
-  let newArr: number[] = [];
-  newArr = newArr.concat(row1,row2,row3);
 
-  rPieces.forEach(function (piece, index){
+  let newArr: number[] = [];
+  newArr = newArr.concat(row1, row2, row3);
+
+  rPieces.forEach(function (piece, index) {
     piece.material[5].dispose();
-    piece.material[5] = new THREE.MeshBasicMaterial({ color: cubeColor[newArr[index]] });
-  })
+    piece.material[5] = new THREE.MeshBasicMaterial({
+      color: cubeColor[newArr[index]],
+    });
+  });
 
   //pieces.splice(17,9,rPieces);
 }
 
-function filterR(_element: THREE.Mesh, index: number){
-  return (index > 17);
+type Faces = "R" | "L" | "U" | "D" | "F" | "B";
 
-}
-
-function filterL(_element: THREE.Mesh, index: number){
-  return (index < 9);
-}
-
-function filterU(_element: THREE.Mesh, index: number){
-  return (index % 9 >= 6);
-}
-
-function filterD(_element: THREE.Mesh, index: number){
-  return (index % 9 <= 2)
-}
-
-function filterF(_element: THREE.Mesh, index: number){
-  return (index % 3 == 2)
-}
-
-function filterB(_element: THREE.Mesh, index: number){
-  return(index % 3 == 0);
-}
-
+const filterCubes = (face: Faces) => {
+  return cubeIndexCalcs[face];
+};
