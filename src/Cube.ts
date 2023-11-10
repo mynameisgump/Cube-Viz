@@ -244,9 +244,3 @@ export class Cube {
     console.log("");
   }
 }
-
-//Testing Code
-//let testCube = new Cube();
-//testCube.printFaces();
-//testCube.moveRPrime();
-//testCube.printFaces();
